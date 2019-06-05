@@ -13,6 +13,7 @@ import(
 func main () {
   r := mux.NewRouter()
   r.HandleFunc("/new", controllers.CreateTransaction).Methods("POST")
+  r.HandleFunc("/__heartbeat__", controllers.GetHeartbeat).Methods("GET")
 
   port := os.Getenv("PORT")
 
