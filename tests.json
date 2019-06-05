@@ -1,0 +1,23 @@
+{
+	  "user_id" : 2,
+	  "city_name" : "Berlin",
+	  "country_code" : "de",
+	  "time" : "05 Aug 12 02:47 UTC"
+
+}
+
+{
+	  "user_id" : 2,
+	  "city_name" : "toronto",
+	  "country_code" : "ca",
+	  "time" : "05 Aug 12 14:30 UTC"
+
+}
+
+{
+	  "user_id" : 2,
+	  "city_name" : "cancun",
+	  "country_code" : "mx",
+	  "time" : "05 Aug 12 15:03 UTC"
+
+}
