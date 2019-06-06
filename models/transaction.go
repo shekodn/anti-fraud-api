@@ -42,7 +42,7 @@ func addLastTx(currentTx *Transaction){
   }
 }
 
-func isFraud(currentTx *Transaction, previousTx Transaction) (map[string] interface{}, bool) {
+func IsLegit(currentTx *Transaction, previousTx Transaction) (map[string] interface{}, bool) {
 
   previousCity := s.ToLower(lastTransactions[previousTx.UserId].CityName)
   previousCountryCode := s.ToLower(lastTransactions[previousTx.UserId].CountryCode)
@@ -117,7 +117,7 @@ func (tx *Transaction) Validate() (map[string] interface{}, bool) {
 
       previousTx := getPreviousTx(tx)
 
-      if resp, ok := isFraud(tx, previousTx); !ok {
+      if resp, ok := IsLegit(tx, previousTx); !ok {
         fmt.Println("IS FRAUD!")
         return resp, false
       } else {
