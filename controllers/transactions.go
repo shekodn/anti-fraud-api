@@ -38,6 +38,6 @@ var CreateTransaction = func(w http.ResponseWriter, r *http.Request) {
     // } else{
     //   w.WriteHeader(http.StatusBadRequest)
     // }
-
+    w.WriteHeader(http.StatusCreated)
     u.Respond(w, resp)
 }

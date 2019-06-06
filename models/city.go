@@ -24,6 +24,9 @@ type Coordinate struct {
 
 var citiesDB = make(map[string]Coordinate)
 
+// Boeing 777-300ER Engine
+// Max Level Speed (at altitude)575 mph (930 km/h) at 35,000 ft (10,675 m), Mach 0.87
+const Kps = 0.2583333333 // kilometer per second assuming max speed of (930 km/h)
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::                                                                         :::
@@ -80,17 +83,27 @@ func GetRealDistance(lat1 float64, lng1 float64, lat2 float64, lng2 float64, uni
 			dist = dist * 0.8684
 		}
 	}
-
 	return dist
 }
 
 func GetTime(t1, t2 time.Time) (float64) {
-  // t1.Format("2006-01-02T15:04:05")
-  // t2.Format("2006-01-02T15:04:05")
-
   diff := t2.Sub(t1)
-
   return diff.Seconds()
+}
+
+// Math for calculating if transaction is pbysically (commenrcially, not military) possible
+// Assuming the maximum distance somone can travel (in KM) k/s * s
+func getPotentialDistance(kps float64, deltaSeconds float64) float64{
+  return(kps*deltaSeconds)
+}
+
+// real distance should always be = or <= to potential
+// distance (ideal distance that you can travel with ideal conditions)
+func isPosible(realDistance, potentialDistance float64) bool {
+  if (realDistance > potentialDistance) {
+    return false
+  }
+  return true
 }
 
 func init() {

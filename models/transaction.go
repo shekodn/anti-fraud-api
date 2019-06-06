@@ -16,59 +16,51 @@ type Transaction struct {
   UserId uint `json:"user_id"`
 }
 
+
+// this will be the cache
 var lastTransactions = make(map[uint]Transaction)
 
-
-func getPotentialDistance(kps float64, deltaSeconds float64) float64{
-  return(kps*deltaSeconds)
+// Cache functions
+// Checks if previous transaction exists in cache memory
+func previousTxExist(currentTx *Transaction, m map[uint]Transaction) (bool) {
+  _, ok := m[currentTx.UserId]
+  return ok
 }
 
-func isPosible(realDistance, potentialDistance float64) bool {
-  if (realDistance > potentialDistance) {
-    return false
-  }
-  return true
+// gets previous transaction
+func getPreviousTx(currentTx *Transaction) (Transaction) {
+  return lastTransactions[currentTx.UserId]
 }
 
-func isFraud(tx *Transaction) (map[string] interface{}, bool) {
-
-  if _, ok := lastTransactions[tx.UserId]; !ok {
-    lastTransactions[tx.UserId] = Transaction{
-      CityName: tx.CityName,
-      CountryCode: tx.CountryCode,
-      UserId: tx.UserId,
-      Time: tx.Time,
-    }
-
-    return u.Message(true, "success"), true
+// Add current Transaction as last transaction to Cache
+func addLastTx(currentTx *Transaction){
+  lastTransactions[currentTx.UserId] = Transaction{
+    CityName: currentTx.CityName,
+    CountryCode: currentTx.CountryCode,
+    UserId: currentTx.UserId,
+    Time: currentTx.Time,
   }
+}
 
-  // Boeing 777-300ER Engine
-  // https://www.google.com/search?q=velocity+boeing+777&oq=velocity+boeing+777&aqs=chrome..69i57j0l2.4438j0j4&sourceid=chrome&ie=UTF-8
-  // Max Level Speed (at altitude)	575 mph (930 km/h) at 35,000 ft (10,675 m), Mach 0.87
-  const Kps = 0.2583333333 // kilometer per second assuming max speed of (930 km/h)
+func isFraud(currentTx *Transaction, previousTx Transaction) (map[string] interface{}, bool) {
 
-  previousCity := s.ToLower(lastTransactions[tx.UserId].CityName)
-  previousCountryCode := s.ToLower(lastTransactions[tx.UserId].CountryCode)
+  previousCity := s.ToLower(lastTransactions[previousTx.UserId].CityName)
+  previousCountryCode := s.ToLower(lastTransactions[previousTx.UserId].CountryCode)
   previousKey := previousCity + previousCountryCode
-  // previousTime, err := time.Parse(time.RFC3339, "2012-05-08T14:30:05.000Z")
-  previousTime, err := time.Parse(time.RFC822, lastTransactions[tx.UserId].Time)
-
-  fmt.Println("User's last valid tx was in: ", previousKey)
+  previousTime, err := time.Parse(time.RFC822, lastTransactions[previousTx.UserId].Time)
 
   if err != nil {
-    fmt.Println(err)
+    fmt.Println("Error:", err)
     return u.Message(false, "Unable to parse previousTime"), false
   }
 
-  currentCity := s.ToLower(tx.CityName)
-  currentCountryCode := s.ToLower(tx.CountryCode)
+  currentCity := s.ToLower(currentTx.CityName)
+  currentCountryCode := s.ToLower(currentTx.CountryCode)
   currentKey :=  currentCity + currentCountryCode
-  // currentTime, err := time.Parse(time.RFC3339, "2012-05-08T15:03:05.000Z")
-  currentTime, err := time.Parse(time.RFC822, tx.Time)
+  currentTime, err := time.Parse(time.RFC822, currentTx.Time)
 
   if err != nil {
-    fmt.Println(err)
+    fmt.Println("Error:", err)
     return u.Message(false, "Unable to parse currentTime"), false
   }
 
@@ -89,15 +81,18 @@ func isFraud(tx *Transaction) (map[string] interface{}, bool) {
   // fmt.Printf("Potential Distance in KM (Best Case Scenario): %f\n", potentialDistance)
   // fmt.Printf("Is Possible?: %t\n", isPosible(realDistance, potentialDistance))
 
+  fmt.Println("PREVIOUS TX: ", lastTransactions[currentTx.UserId])
 
   if isPosible(realDistance, potentialDistance) {
-    lastTransactions[tx.UserId] = Transaction{
-      CityName: tx.CityName,
-      CountryCode: tx.CountryCode,
-      UserId: tx.UserId,
-      Time: tx.Time,
+    lastTransactions[currentTx.UserId] = Transaction{
+      CityName: currentTx.CityName,
+      CountryCode: currentTx.CountryCode,
+      UserId: currentTx.UserId,
+      Time: currentTx.Time,
     }
-    fmt.Println("User's last valid tx is NOW: ", lastTransactions[tx.UserId])
+
+    fmt.Println("NEW TX: ", lastTransactions[currentTx.UserId])
+
     return u.Message(true, "Transaction is Possible"), true
   }
 
@@ -118,13 +113,25 @@ func (tx *Transaction) Validate() (map[string] interface{}, bool) {
       return resp, false
     }
 
-    if resp, ok := isFraud(tx); !ok {
-      fmt.Println("tx.isFraud")
-      return resp, false
-    }
+    if previousTxExist(tx, lastTransactions) {
 
-    return u.Message(true, "success"), true
-}
+      previousTx := getPreviousTx(tx)
+
+      if resp, ok := isFraud(tx, previousTx); !ok {
+        fmt.Println("IS FRAUD!")
+        return resp, false
+      } else {
+        // TX is not fraud
+        return u.Message(true, "success"), true
+      }
+    } else {
+      // add last tx because it doesn't exist in cache
+      addLastTx(tx)
+      // Returns TRUE because since TX was not in cache, you cannot flag it
+      // as fraudulent
+      return u.Message(true, "success"), true
+    }
+  }
 
 func (tx *Transaction) Create() (map[string] interface {}) {
 
