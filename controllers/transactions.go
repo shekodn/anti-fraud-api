@@ -23,9 +23,9 @@ var CreateTransaction = func(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    if !IsLegit(tx.UserId, tx.CityName, tx.CountryCode, tx.Time) {
+    if  result, ok := IsLegit(tx.UserId, tx.CityName, tx.CountryCode, tx.Time); !ok {
       w.WriteHeader(http.StatusUnavailableForLegalReasons)
-      u.Respond(w, u.Message(false, "Transaction is Fraudalent"))
+      u.Respond(w, result)
       return
     }
 
