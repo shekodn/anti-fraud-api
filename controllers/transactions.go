@@ -5,7 +5,6 @@ import(
   // "strconv"
   "net/http"
   "encoding/json"
-
   "github.com/shekodn/anti-fraud-api/models"
   u "github.com/shekodn/anti-fraud-api/utils"
 
@@ -24,20 +23,14 @@ var CreateTransaction = func(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    if  result, ok := IsLegit(tx.UserId, tx.CityName, tx.CountryCode, tx.Time); !ok {
+      w.WriteHeader(http.StatusUnavailableForLegalReasons)
+      u.Respond(w, result)
+      return
+    }
+
     resp := tx.Create()
 
-    // isSuccess, err := strconv.ParseBool(resp["status"])
-    //
-    // if err != nil {
-    //   fmt.Println("Error: ", err)
-    //   return
-    // }
-    //
-    // if isSuccess {
-    //   w.WriteHeader(http.StatusCreated)
-    // } else{
-    //   w.WriteHeader(http.StatusBadRequest)
-    // }
     w.WriteHeader(http.StatusCreated)
     u.Respond(w, resp)
 }
