@@ -3,6 +3,7 @@ package models
 import (
   "time"
   "fmt"
+  s "strings"
   u "github.com/shekodn/anti-fraud-api/utils"
   "github.com/jinzhu/gorm"
 )
@@ -37,6 +38,10 @@ func (tx *Transaction) Create() (map[string] interface {}) {
     fmt.Println("TX couldn't be validated")
     return resp
   }
+
+  // Lowercase name and country before saving them in DB
+  tx.CityName = s.ToLower(tx.CityName)
+  tx.CountryCode = s.ToLower(tx.CountryCode)
 
   GetDB().Create(tx)
 
