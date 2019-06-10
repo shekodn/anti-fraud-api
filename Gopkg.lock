@@ -2,6 +2,22 @@
 
 
 [[projects]]
+  digest = "1:c950e574951c7199fb3d990d0e7a61996f40f8e646ba7cf8a557878d4c737f53"
+  name = "github.com/go-redis/redis"
+  packages = [
+    ".",
+    "internal",
+    "internal/consistenthash",
+    "internal/hashtag",
+    "internal/pool",
+    "internal/proto",
+    "internal/util",
+  ]
+  pruneopts = "UT"
+  revision = "75795aa4236dc7341eefac3bbe945e68c99ef9df"
+  version = "v6.15.3"
+
+[[projects]]
   branch = "master"
   digest = "1:adddf11eb27039a3afcc74c5e3d13da84e189012ec37acfc2c70385f25edbe0f"
   name = "github.com/gocarina/gocsv"
@@ -61,6 +77,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/go-redis/redis",
     "github.com/gocarina/gocsv",
     "github.com/gorilla/mux",
     "github.com/jinzhu/gorm",
