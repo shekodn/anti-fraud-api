@@ -2,15 +2,14 @@
 package main
 
 import (
-  "testing"
-  "bytes"
-  "net/http"
-  "net/http/httptest"
-  "encoding/json"
-  // "fmt"
-  "github.com/shekodn/anti-fraud-api/models"
-  "github.com/shekodn/anti-fraud-api/controllers"
-
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	// "fmt"
+	"github.com/shekodn/anti-fraud-api/controllers"
+	"github.com/shekodn/anti-fraud-api/models"
 )
 
 func TestCreateTransaction(t *testing.T) {
@@ -32,40 +31,41 @@ func TestCreateTransaction(t *testing.T) {
 }
 
 func TestIsFraud1(t *testing.T) {
-  var tx1 models.Transaction
-  var tx2 models.Transaction
-  var tx3 models.Transaction
 
-  var jsonBerlin =  []byte(`{"user_id" : 2, "city_name" : "Berlin", "country_code" : "de", "time" : "05 Aug 12 02:47 UTC"}`)
-  var jsonToronto = []byte(`{"user_id" : 2, "city_name" : "toronto", "country_code" : "ca", "time" : "05 Aug 12 14:30 UTC"}`)
-  var jsonCancun =  []byte(`{"user_id" : 2, "city_name" : "cancun", "country_code" : "mx", "time" : "05 Aug 12 15:03 UTC"}`)
+	var tx1 models.Transaction
+	var tx2 models.Transaction
+	var tx3 models.Transaction
 
-  err := json.Unmarshal(jsonBerlin, &tx1)
-  if err != nil {
-    panic(err)
-  }
+	var jsonBerlin = []byte(`{"user_id" : 2, "city_name" : "Berlin", "country_code" : "de", "time" : "05 Aug 12 02:47 UTC"}`)
+	var jsonToronto = []byte(`{"user_id" : 2, "city_name" : "toronto", "country_code" : "ca", "time" : "05 Aug 12 14:30 UTC"}`)
+	var jsonCancun = []byte(`{"user_id" : 2, "city_name" : "cancun", "country_code" : "mx", "time" : "05 Aug 12 15:03 UTC"}`)
 
-  err = json.Unmarshal(jsonToronto, &tx2)
-  if err != nil {
-    panic(err)
-  }
+	err := json.Unmarshal(jsonBerlin, &tx1)
+	if err != nil {
+		panic(err)
+	}
 
-  err = json.Unmarshal(jsonCancun, &tx3)
-  if err != nil {
-    panic(err)
-  }
+	err = json.Unmarshal(jsonToronto, &tx2)
+	if err != nil {
+		panic(err)
+	}
 
-  _, isLegit1 := models.IsLegit(&tx2, tx1)
+	err = json.Unmarshal(jsonCancun, &tx3)
+	if err != nil {
+		panic(err)
+	}
 
-  if isLegit1 != true {
-    t.Errorf("Transaction is supposed to be legit: got %v want %v",
-      isLegit1, true)
-  }
+	_, isLegit1 := models.IsLegit(&tx2, tx1)
 
-  _, isLegit2 := models.IsLegit(&tx3, tx2)
+	if isLegit1 != true {
+		t.Errorf("Transaction is supposed to be legit: got %v want %v",
+			isLegit1, true)
+	}
 
-  if isLegit2 != false {
-    t.Errorf("Transaction is supposed to NOT be legit: got %v want %v",
-      isLegit2, false)
-  }
+	_, isLegit2 := models.IsLegit(&tx3, tx2)
+
+	if isLegit2 != false {
+		t.Errorf("Transaction is supposed to NOT be legit: got %v want %v",
+			isLegit2, false)
+	}
 }
