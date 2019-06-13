@@ -37,9 +37,10 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate(&Transaction{}) // DB migration # TODO
+
 }
 
-func GetDB() *gorm.DB {
+// getDB returns gorm db
+func getDB() *gorm.DB {
 	return db
 }

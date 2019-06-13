@@ -1,30 +1,29 @@
 package main
 
-import(
-  "fmt"
-  "log"
-  "os"
-  "net/http"
-  "github.com/shekodn/anti-fraud-api/controllers"
-  "github.com/gorilla/mux"
+import (
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/shekodn/anti-fraud-api/controllers"
+	"log"
+	"net/http"
+	"os"
 )
 
+func main() {
+	r := mux.NewRouter()
+	r.HandleFunc("/new", controllers.CreateTransaction).Methods("POST")
+	r.HandleFunc("/__heartbeat__", controllers.GetHeartbeat).Methods("GET")
 
-func main () {
-  r := mux.NewRouter()
-  r.HandleFunc("/new", controllers.CreateTransaction).Methods("POST")
-  r.HandleFunc("/__heartbeat__", controllers.GetHeartbeat).Methods("GET")
+	port := os.Getenv("PORT")
 
-  port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
 
-  if port == "" {
-    port = "8000"
-  }
+	fmt.Println("Listening in " + port)
+	err := http.ListenAndServe(":"+port, r)
 
-  fmt.Println("Listening in " + port)
-  err := http.ListenAndServe(":" + port, r)
-
-  if err != nil {
-    log.Println("Error:", err)
-  }
+	if err != nil {
+		log.Println("Error:", err)
+	}
 }
