@@ -4,7 +4,12 @@ import (
 	"net/http"
 )
 
-var GetHeartbeat = func(w http.ResponseWriter, r *http.Request) {
+var GetHealthz = func(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("I'm alive"))
+	w.Write([]byte("Ok"))
+}
+
+var GetReadyz = func(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Ok"))
 }

@@ -1,0 +1,9 @@
+package: github.com/shekodn/anti-fraud-api
+import:
+- package: github.com/go-redis/redis
+- package: github.com/gocarina/gocsv
+- package: github.com/jinzhu/gorm
+  subpackages:
+  - dialects/postgres
+- package: github.com/joho/godotenv
+- package: github.com/sirupsen/logrus

@@ -37,6 +37,7 @@ func init() {
 	}
 
 	db = conn
+	db.Debug().AutoMigrate(&Transaction{}) // DB migration # TODO
 
 }
 

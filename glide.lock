@@ -1,0 +1,39 @@
+hash: db11174a4244aba25c44ddd626743aafc0c04554fbd9fa14fbe0e53ec14bd217
+updated: 2019-06-14T14:17:39.401971-05:00
+imports:
+- name: github.com/go-redis/redis
+  version: d264eb8e810502d7af0bed0f9f0376181a0dd7fe
+  subpackages:
+  - internal
+  - internal/consistenthash
+  - internal/hashtag
+  - internal/pool
+  - internal/proto
+  - internal/util
+- name: github.com/gocarina/gocsv
+  version: 2fc85fcf0c07e8bb9123b2104e84cfc2a5b53724
+- name: github.com/gorilla/mux
+  version: ed099d42384823742bba0bf9a72b53b55c9e2e38
+- name: github.com/jinzhu/gorm
+  version: 01b66011427614f01e84a473b0303c917179f2a0
+  subpackages:
+  - dialects/postgres
+- name: github.com/jinzhu/inflection
+  version: f5c5f50e6090ae76a29240b61ae2a90dd810112e
+- name: github.com/joho/godotenv
+  version: 5c0e6c6ab1a0a9ef0a8822cba3a05d62f7dad941
+- name: github.com/konsorten/go-windows-terminal-sequences
+  version: f55edac94c9bbba5d6182a4be46d86a2c9b5b50e
+- name: github.com/lib/pq
+  version: 2ff3cb3adc01768e0a552b3a02575a6df38a9bea
+  subpackages:
+  - hstore
+  - oid
+  - scram
+- name: github.com/sirupsen/logrus
+  version: 2a22dbedbad1fd454910cd1f44f210ef90c28464
+- name: golang.org/x/sys
+  version: b47fdc937951267e2d980171881317deea47f29b
+  subpackages:
+  - unix
+testImports: []
