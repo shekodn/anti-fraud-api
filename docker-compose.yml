@@ -16,7 +16,7 @@ services:
     depends_on:
       - "db"
       - "cache"
-    command: ["./scripts/wait-for-postgres.sh", "http://db:5432"]
+    command: ["./scripts/wait-for-postgres.sh", "http://localhost:5432"]
 
   db:
     image: postgres
