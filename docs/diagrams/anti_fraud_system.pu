@@ -1,0 +1,27 @@
+@startuml
+
+
+node Monolith
+
+node Fraud_MS {
+    node Fraud
+    file cities_csv
+    database Redis
+}
+
+node Transaction_MS {
+	node Transactions
+    database PostgreSQL
+}
+
+
+Monolith -->> Transactions : 1. Transaction (TX)
+Transactions -->> Fraud : 2. IsLegit(TX)
+Fraud -->> Redis : 3. Get Previous TX Coordinates
+Redis -->> Fraud : 4. Previous TX Coordinates
+Fraud -->> cities_csv : 5. Determines if TX is possible
+Fraud -->> Transactions : 6. Response
+Transactions -->> PostgreSQL : 7. If true : Create Transaction
+Transactions -->> Monolith : 8. Response
+
+@enduml

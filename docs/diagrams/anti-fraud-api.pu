@@ -1,0 +1,24 @@
+@startuml
+
+database PostgreSQL
+database Redis
+actor Client
+
+node App {
+file cities_csv
+node Transactions
+node Fraud
+
+}
+
+Client -->> Transactions : 1. Post /new
+Transactions -->> Fraud : 2. IsLegit(TX)
+Fraud -->> Redis : 3. Get Previous TX Coordinates
+Redis -->> Fraud : 4. Previous TX Coordinates
+Fraud -->> cities_csv : 5. Determines if TX is possible
+Fraud -->> Transactions : 6. Response
+Transactions -->> PostgreSQL : 7. If true : Create Transaction
+Transactions -->> Client : 8. Response
+
+
+@enduml
